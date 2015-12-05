@@ -3,8 +3,11 @@ types
 -- TODO Define types here
 values
 -- TODO Define values here
+public numberOfSemaphores = 2;
 instance variables
 -- TODO Define instance variables here
+train : [Train] := nil;
+semaphores: set of Semaphore := {};
 operations
 -- TODO Define operations here
 functions

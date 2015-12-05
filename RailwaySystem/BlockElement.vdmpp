@@ -1,15 +1,10 @@
-class Railway
+class BlockElement
 types
-	
+-- TODO Define types here
 values
 -- TODO Define values here
-
 instance variables
 
-public trainCounter : nat := 0;
-blocks: seq of Block;
-semaphore: seq of Semaphore;
-trains: set of Train := {};
 
 operations
 -- TODO Define operations here
@@ -17,4 +12,4 @@ functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Railway
+end BlockElement
