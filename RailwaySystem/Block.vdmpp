@@ -1,15 +1,31 @@
-class Block
+class Block is subclass of RailwayElement
 types
 -- TODO Define types here
 values
--- TODO Define values here
-public numberOfSemaphores = 2;
+
+
 instance variables
--- TODO Define instance variables here
-train : [Train] := nil;
-semaphores: set of Semaphore := {};
+
+	public train : [Train] := nil;
+	
+	
+	inv clockwiseElement <> nil => isofclass(RailwayElement, clockwiseElement);
+	
+	inv counterClockwiseElement <> nil => isofclass(RailwayElement, counterClockwiseElement);
+
 operations
--- TODO Define operations here
+
+	
+
+	public placeTrain: [Train] ==> ()
+		placeTrain(newTrain) == (
+			train := newTrain;
+		)
+		pre
+			train = nil
+		post
+			train <> nil;
+
 functions
 -- TODO Define functiones here
 traces

@@ -9,10 +9,22 @@ instance variables
 public trainCounter : nat := 0;
 blocks: seq of Block;
 semaphore: seq of Semaphore;
-trains: set of Train := {};
+trains: set of [Train] := {};
 
 operations
--- TODO Define operations here
+
+--public addTrain: [Train] ==> ()
+--	addTrain(newTrain) == (
+	
+		
+--	)
+--	pre 
+--	post ;
+
+public trainNumber:() ==> nat
+trainNumber() == return trainCounter;
+
+
 functions
 -- TODO Define functiones here
 traces

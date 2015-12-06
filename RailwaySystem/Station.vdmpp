@@ -1,11 +1,19 @@
-class Station
+class Station is subclass of RailwayElement
 types
 -- TODO Define types here
 values
 -- TODO Define values here
 instance variables
-clockwiseTrain : [Train] := nil;
-counterClockwiseTrain: [Train] := nil;
+
+	public clockwiseTrain : [Train] := nil;
+	public counterClockwiseTrain: [Train] := nil;
+	
+	
+	inv clockwiseElement <> nil => isofclass(Block, clockwiseElement);
+	inv counterClockwiseElement <> nil => isofclass(Block, counterClockwiseElement)
+		
+
+
 -- TODO Define instance variables here
 operations
 -- TODO Define operations here

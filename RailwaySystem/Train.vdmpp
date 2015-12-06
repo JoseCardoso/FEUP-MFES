@@ -1,15 +1,24 @@
 class Train
 types
-	public Direction = <ClOCKWISE> |<COUNTERCLOCKWISE>;
+	public Direction = <ClOCKWISE> | <COUNTERCLOCKWISE>;
+	public Id = nat1;
 	
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
 public direction : Direction:= <ClOCKWISE>;
-
+public id : Id;
 operations
--- TODO Define operations here
+
+public Train: Id * Direction  ==> Train
+	Train(newid, newdir) == (
+	id:=newid;
+	direction := newdir;
+	return self
+	)
+		
+
 functions
 -- TODO Define functiones here
 traces

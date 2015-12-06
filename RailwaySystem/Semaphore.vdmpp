@@ -7,11 +7,8 @@ values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
-public blockClockwise : Block;
-public blockCounterClockwise : Block;
 
-public semaphoreClockwise : Light:= <Red>;
-public semaphoreCounterClockwise: Light := <Red>;
+public semaphoreLight : Light:= <Red>;
 
 
 operations
