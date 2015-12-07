@@ -1,10 +1,15 @@
+-- DUVIDA!!!!!!! Como se faz a parte dos testes! "ralewayTests" 
+--               Como fazer para organizar o caminho no set elements
+--               Como integrar semaforos
+--               Como integrar sensores             
+
 class RailwayElement
 types
 -- TODO Define types here
 values
 -- TODO Define values here
 instance variables
-
+	
 
 	public clockwiseSemaphore: [Semaphore];
 	public counterClockwiseSemaphore: [Semaphore];
@@ -13,7 +18,32 @@ instance variables
 	public counterClockwiseElement: [RailwayElement];
 
 operations
--- TODO Define operations here
+
+-- places a train in the corresponding railwayElement
+	public placeTrain: [Train] ==> ()
+		placeTrain(newTrain) == 
+		is subclass responsibility;
+		
+-- removes train from railwayElement
+	public removeTrain: [Train] ==> ()
+		removeTrain(oldTrain) ==
+		is subclass responsibility;
+		
+-- check if train is in ralewayElement 
+	public checkTrain: [Train] ==> bool
+		checkTrain(thisTrain) ==
+		is subclass responsibility;
+		
+-- check if has a train going clockwise
+	public checkClockwiseTrain: () ==> bool
+		 checkClockwiseTrain() ==
+		 is subclass responsibility; 
+
+-- check if has a train going counterclockwise
+	public checkCounterClockwiseTrain: () ==> bool
+		 checkCounterClockwiseTrain() ==
+		 is subclass responsibility;
+			
 functions
 -- TODO Define functiones here
 traces

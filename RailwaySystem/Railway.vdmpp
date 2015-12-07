@@ -7,9 +7,8 @@ values
 instance variables
 
 public trainCounter : nat := 0;
-blocks: seq of Block;
-semaphore: seq of Semaphore;
-trains: set of [Train] := {};
+public railwayElements: seq of RailwayElement := [];
+public trains: set of [Train] := {};
 
 operations
 

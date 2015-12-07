@@ -9,14 +9,62 @@ instance variables
 	public counterClockwiseTrain: [Train] := nil;
 	
 	
-	inv clockwiseElement <> nil => isofclass(Block, clockwiseElement);
-	inv counterClockwiseElement <> nil => isofclass(Block, counterClockwiseElement)
+	inv clockwiseElement <> nil => isofclass(Rail, clockwiseElement);
+	inv counterClockwiseElement <> nil => isofclass(Rail, counterClockwiseElement)
 		
 
 
 -- TODO Define instance variables here
 operations
--- TODO Define operations here
+
+-- places a train in the corresponding railwayElement
+	public placeTrain: [Train] ==> ()
+		placeTrain(newTrain) == (
+			if newTrain.direction = <ClOCKWISE> then (clockwiseTrain:=newTrain;)
+			else (counterClockwiseTrain:=newTrain;)
+		)
+		pre
+			if newTrain.direction = <ClOCKWISE> then (clockwiseTrain = nil)
+			else (counterClockwiseTrain = nil)
+		post
+			(clockwiseTrain <> nil => clockwiseTrain.direction = <ClOCKWISE>)
+			and
+			(counterClockwiseTrain <> nil => counterClockwiseTrain.direction = <COUNTERCLOCKWISE>);
+			
+-- removes train from railwayElement			
+	public removeTrain: [Train] ==> ()
+		removeTrain(oldTrain) == (
+			if oldTrain = clockwiseTrain then clockwiseTrain := nil
+			elseif oldTrain =counterClockwiseTrain then counterClockwiseTrain := nil;
+		)
+		pre
+			oldTrain = clockwiseTrain or oldTrain = counterClockwiseTrain
+		post
+			clockwiseTrain = nil or counterClockwiseTrain = nil;
+			
+-- check if train is in ralewayElement 
+	public checkTrain: [Train] ==> bool
+		checkTrain(thisTrain) == (
+			if (thisTrain = clockwiseTrain or thisTrain = counterClockwiseTrain) 
+				then return true
+			else return false
+			);
+			
+-- check if has a train going clockwise
+	public checkClockwiseTrain: () ==> bool
+		 checkClockwiseTrain() == (
+		 if clockwiseTrain <> nil then return true
+		 else return false
+		 );
+
+-- check if has a train going counterclockwise
+	public checkCounterClockwiseTrain: () ==> bool
+		 checkCounterClockwiseTrain() == (
+		 if counterClockwiseTrain <> nil then return true
+		 else return false
+		 );
+			
+
 functions
 -- TODO Define functiones here
 traces
