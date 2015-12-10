@@ -8,7 +8,7 @@ instance variables
 
 public trainCounter : nat := 0;
 public railwayElements: seq of RailwayElement := [];
-public trains: set of [Train] := {};
+public trains: set of Train := {};
 
 
 operations
@@ -18,7 +18,7 @@ operations
 	appendRailwayElement(newRailwayElement) == (
 		if (len railwayElements > 0) then (
 			-- set elements ordering
-			newRailwayElement.counterClockwiseElement := railwayElements(len railwayElements);
+			newRailwayElement.setCounterClockwiseElement(railwayElements(len railwayElements));
 			railwayElements(len railwayElements).clockwiseElement := newRailwayElement;
 		);
 		

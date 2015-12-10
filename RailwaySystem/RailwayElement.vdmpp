@@ -1,8 +1,3 @@
--- DUVIDA!!!!!!! Como se faz a parte dos testes! "ralewayTests" 
---               Como fazer para organizar o caminho no set elements
---               Como integrar semaforos
---               Como integrar sensores             
-
 class RailwayElement
 types
 -- TODO Define types here
@@ -10,13 +5,11 @@ values
 -- TODO Define values here
 instance variables
 	
-
-	public clockwiseSemaphore: [Semaphore];
-	public counterClockwiseSemaphore: [Semaphore];
+	public clockwiseSemaphore: [Semaphore] := nil;
+	public counterClockwiseSemaphore: [Semaphore] := nil;
 	
 	public clockwiseElement: [RailwayElement] := nil;
 	public counterClockwiseElement: [RailwayElement] := nil;
-	public teste: nat1;
 
 operations
 /*
@@ -88,6 +81,20 @@ public RailwayElement: clockwiseSemaphore * counterClockwiseSemaphore * Clockwis
 				return true 
 			else 
 			return false);
+			
+			
+-- sets clockwiseElement
+	public setClockwiseElement: RailwayElement ==> ()
+	setClockwiseElement(newRailwayElement) == (
+		clockwiseElement := newRailwayElement;
+	);
+
+-- sets counterClockwiseElement
+	public setCounterClockwiseElement: RailwayElement ==> ()
+	setCounterClockwiseElement(newRailwayElement) == (
+		counterClockwiseElement := newRailwayElement;
+	);
+
 		
 functions
 -- TODO Define functiones here
