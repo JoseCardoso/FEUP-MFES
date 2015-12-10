@@ -12,17 +12,24 @@ public trains: set of [Train] := {};
 
 operations
 
---public addTrain: [Train] ==> ()
---	addTrain(newTrain) == (
-	
+-- adds a railwayelement to the end of the current sequence
+	public appendRailwayElement: RailwayElement ==> ()
+	appendRailwayElement(newRail) == (
+		if (len railwayElements > 0) then (
+			-- set elements ordering
+			newRail.counterClockwiseElement := railwayElements(len railwayElements);
+			railwayElements(len railwayElements).clockwiseElement := newRail;
+		);
 		
---	)
---	pre 
---	post ;
-
-public trainNumber:() ==> nat
-trainNumber() == return trainCounter;
-
+		-- add to sequence
+		railwayElements := railwayElements ^ [newRail];
+		
+		if isofclass(Rail, newRail) then (
+			IO`print("Added new rail.\n")
+		) else (
+			IO`print("Added new Station.\n")
+		)
+	);
 
 functions
 -- TODO Define functiones here

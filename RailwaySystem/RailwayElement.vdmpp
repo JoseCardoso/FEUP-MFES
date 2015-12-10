@@ -14,11 +14,17 @@ instance variables
 	public clockwiseSemaphore: [Semaphore];
 	public counterClockwiseSemaphore: [Semaphore];
 	
-	public clockwiseElement: [RailwayElement];
-	public counterClockwiseElement: [RailwayElement];
+	public clockwiseElement: [RailwayElement] := nil;
+	public counterClockwiseElement: [RailwayElement] := nil;
+	public teste: nat1;
 
 operations
-
+/*
+public RailwayElement: clockwiseSemaphore * counterClockwiseSemaphore * ClockwiseElement * counterClockwiseElement ==> RailwayElement
+	RailwayElement(CSem, CCSem, CElem, CCElem) ==(
+	clockwiseSemaphore:= CSem;
+	counterClockwiseSe
+	)*/
 -- places a train in the corresponding railwayElement
 	public placeTrain: [Train] ==> ()
 		placeTrain(newTrain) == 

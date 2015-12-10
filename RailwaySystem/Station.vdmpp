@@ -18,7 +18,7 @@ instance variables
 operations
 
 -- places a train in the corresponding railwayElement
-	public placeTrain: [Train] ==> ()
+	public placeTrain: Train ==> ()
 		placeTrain(newTrain) == (
 			if newTrain.direction = <ClOCKWISE> then (clockwiseTrain:=newTrain;)
 			else (counterClockwiseTrain:=newTrain;)
