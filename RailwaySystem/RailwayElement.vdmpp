@@ -25,6 +25,7 @@ public RailwayElement: clockwiseSemaphore * counterClockwiseSemaphore * Clockwis
 	clockwiseSemaphore:= CSem;
 	counterClockwiseSe
 	)*/
+	
 -- places a train in the corresponding railwayElement
 	public placeTrain: [Train] ==> ()
 		placeTrain(newTrain) == 
@@ -49,7 +50,45 @@ public RailwayElement: clockwiseSemaphore * counterClockwiseSemaphore * Clockwis
 	public checkCounterClockwiseTrain: () ==> bool
 		 checkCounterClockwiseTrain() ==
 		 is subclass responsibility;
-			
+		 
+-- Changes clockwise semaphore to a specific light
+	public changeClockwiseSemaphore: Semaphore`Light ==> ()
+	changeClockwiseSemaphore(light) == (
+		clockwiseSemaphore.semaphoreLight := light;
+	)
+	pre light = <Green> => clockwiseElement.clockwiseSemaphore.semaphoreLight <> <Red>;
+	
+
+-- Changes counterclockwise semaphore to a specific light
+	public changeCounterClockwiseSemaphore: Semaphore`Light ==> ()
+	changeCounterClockwiseSemaphore(light) == (
+		counterClockwiseSemaphore.semaphoreLight := light;
+	)
+	pre light = <Green> => counterClockwiseElement.counterClockwiseSemaphore.semaphoreLight <> <Red>;
+		 
+-- initializes semaphores
+	public initializeSemaphores: () ==> ()
+	initializeSemaphores() ==
+		is subclass responsibility;
+		
+		
+-- checks if the clockwiseSemaphore is red
+	public checkClockwiseSemaphoreIsRed: () ==> bool
+	checkClockwiseSemaphoreIsRed() == (
+			if clockwiseSemaphore.semaphoreLight = <Red> then 
+				return true 
+			else 
+			return false);
+
+
+-- checks if the counterClockwiseSemaphore is red
+	public checkCounterClockwiseSemaphoreIsRed: () ==> bool
+	checkCounterClockwiseSemaphoreIsRed() == (
+			if counterClockwiseSemaphore.semaphoreLight = <Red> then 
+				return true 
+			else 
+			return false);
+		
 functions
 -- TODO Define functiones here
 traces

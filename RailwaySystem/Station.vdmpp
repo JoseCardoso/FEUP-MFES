@@ -36,7 +36,7 @@ operations
 		removeTrain(oldTrain) == (
 			if oldTrain = clockwiseTrain then clockwiseTrain := nil
 			elseif oldTrain =counterClockwiseTrain then counterClockwiseTrain := nil;
-		)
+			)
 		pre
 			oldTrain = clockwiseTrain or oldTrain = counterClockwiseTrain
 		post
@@ -63,7 +63,14 @@ operations
 		 if counterClockwiseTrain <> nil then return true
 		 else return false
 		 );
-			
+		 
+	-- Initialize semaphores of the track
+	public initSemaphores: () ==> ()
+	initSemaphores() == (
+		-- semaphores never get red nor green initially, as there are no trains
+		changeClockwiseSemaphore(<Yellow>);
+		changeCounterClockwiseSemaphore(<Yellow>);
+	)
 
 functions
 -- TODO Define functiones here

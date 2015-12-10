@@ -10,26 +10,34 @@ public trainCounter : nat := 0;
 public railwayElements: seq of RailwayElement := [];
 public trains: set of [Train] := {};
 
+
 operations
 
 -- adds a railwayelement to the end of the current sequence
 	public appendRailwayElement: RailwayElement ==> ()
-	appendRailwayElement(newRail) == (
+	appendRailwayElement(newRailwayElement) == (
 		if (len railwayElements > 0) then (
 			-- set elements ordering
-			newRail.counterClockwiseElement := railwayElements(len railwayElements);
-			railwayElements(len railwayElements).clockwiseElement := newRail;
+			newRailwayElement.counterClockwiseElement := railwayElements(len railwayElements);
+			railwayElements(len railwayElements).clockwiseElement := newRailwayElement;
 		);
 		
-		-- add to sequence
-		railwayElements := railwayElements ^ [newRail];
+		-- add element to seq
+		railwayElements := railwayElements ^ [newRailwayElement];
 		
-		if isofclass(Rail, newRail) then (
+		if isofclass(Rail, newRailwayElement) then (
 			IO`print("Added new rail.\n")
 		) else (
 			IO`print("Added new Station.\n")
 		)
-	);
+	)pre
+		len railwayElements > 0 and isofclass(Station, newRailwayElement) => not isofclass(Station, railwayElements(len railwayElements))
+post
+		len railwayElements = (len railwayElements~ + 1) and
+		len railwayElements > 1 => railwayElements(len railwayElements - 1).clockwiseElement = railwayElements(len railwayElements) and
+		len railwayElements > 1 => railwayElements(len railwayElements).counterClockwiseElement = railwayElements(len railwayElements - 1);
+
+
 
 functions
 -- TODO Define functiones here

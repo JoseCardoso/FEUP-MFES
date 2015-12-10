@@ -8,11 +8,15 @@ values
 instance variables
 -- TODO Define instance variables here
 
-public semaphoreLight : Light:= <Red>;
+public semaphoreLight : Light:= <Yellow>;
 
 
 operations
--- TODO Define operations here
+public Semaphore: Light ==> Semaphore
+	Semaphore(light) == (
+	semaphoreLight:=light;
+	return self
+	)
 functions
 -- TODO Define functiones here
 traces

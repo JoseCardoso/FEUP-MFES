@@ -9,6 +9,7 @@ instance variables
 -- TODO Define instance variables here
 public direction : Direction:= <ClOCKWISE>;
 public id : Id;
+
 operations
 
 public Train: Id * Direction  ==> Train
