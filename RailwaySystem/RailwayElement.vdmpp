@@ -20,17 +20,17 @@ public RailwayElement: clockwiseSemaphore * counterClockwiseSemaphore * Clockwis
 	)*/
 	
 -- places a train in the corresponding railwayElement
-	public placeTrain: [Train] ==> ()
+	public placeTrain: Train ==> ()
 		placeTrain(newTrain) == 
 		is subclass responsibility;
 		
 -- removes train from railwayElement
-	public removeTrain: [Train] ==> ()
+	public removeTrain: Train ==> ()
 		removeTrain(oldTrain) ==
 		is subclass responsibility;
 		
 -- check if train is in ralewayElement 
-	public checkTrain: [Train] ==> bool
+	public checkTrain: Train ==> bool
 		checkTrain(thisTrain) ==
 		is subclass responsibility;
 		

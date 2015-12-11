@@ -32,7 +32,7 @@ operations
 			(counterClockwiseTrain <> nil => counterClockwiseTrain.direction = <COUNTERCLOCKWISE>);
 			
 -- removes train from railwayElement			
-	public removeTrain: [Train] ==> ()
+	public removeTrain: Train ==> ()
 		removeTrain(oldTrain) == (
 			if oldTrain = clockwiseTrain then clockwiseTrain := nil
 			elseif oldTrain =counterClockwiseTrain then counterClockwiseTrain := nil;
@@ -43,7 +43,7 @@ operations
 			clockwiseTrain = nil or counterClockwiseTrain = nil;
 			
 -- check if train is in ralewayElement 
-	public checkTrain: [Train] ==> bool
+	public checkTrain: Train ==> bool
 		checkTrain(thisTrain) == (
 			if (thisTrain = clockwiseTrain or thisTrain = counterClockwiseTrain) 
 				then return true

@@ -17,6 +17,7 @@ operations
 	public appendRailwayElement: RailwayElement ==> ()
 	appendRailwayElement(newRailwayElement) == (
 		if (len railwayElements > 0) then (
+		
 			-- set elements ordering
 			newRailwayElement.setCounterClockwiseElement(railwayElements(len railwayElements));
 			railwayElements(len railwayElements).clockwiseElement := newRailwayElement;
@@ -38,7 +39,54 @@ post
 		len railwayElements > 1 => railwayElements(len railwayElements).counterClockwiseElement = railwayElements(len railwayElements - 1);
 
 
+--sets circular railway ( joins first with last )
+public setCircularRailway: () ==> seq of RailwayElement
+ setCircularRailway() == (
+		railwayElements(len railwayElements).clockwiseElement := railwayElements(1);
+		railwayElements(1).counterClockwiseElement := railwayElements(len railwayElements);
+		IO`print("Closed Track.\n");
+		
+		return railwayElements;
+	)
+	post
+		railwayElements(1).counterClockwiseElement = railwayElements(len railwayElements) and
+		railwayElements(len railwayElements).clockwiseElement = railwayElements(1);
 
+-- Places a new train in a station
+	public placeTrainInStation: nat1 * Train`Direction * nat1 ==> Train
+	placeTrainInStation(index, dir, stationIndex) == (
+		dcl train: Train := new Train(index,dir);
+		dcl tempSet: set of Train := {train};
+		
+		railwayElements(stationIndex).placeTrain(train);
+		trains := trains union tempSet;
+		
+		return train;
+		)pre isofclass(Station, railwayElements(stationIndex));
+		
+-- Places a new train in a rail
+	public placeTrainInRail: nat1 * Train`Direction * nat1 ==> Train
+	placeTrainInRail(index, dir, stationIndex) == (
+		dcl train: Train := new Train(index,dir);
+		dcl tempSet: set of Train := {train};
+		
+		railwayElements(stationIndex).placeTrain(train);
+		trains := trains union tempSet;
+		
+		return train;
+		)pre isofclass(Rail, railwayElements(stationIndex));
+		
+-- Initializes all semaphores. It calls the corresponding subclass function for elements that are rails and stations
+  public initAllSemaphores: () ==> ()
+  initAllSemaphores() == (
+  for all rail in set {r | r in set elems railwayElements & isofclass(Rail, r)} do (
+			rail.initializeSemaphores()
+		);
+		for all station in set {s | s in set elems railwayElements & isofclass(Station, s)} do (
+			station.initializeSemaphores()
+		);
+  );
+  
 functions
 -- TODO Define functiones here
 traces

@@ -16,7 +16,7 @@ instance variables
 operations
 
 -- places a train in the corresponding railwayElement
-	public placeTrain: [Train] ==> ()
+	public placeTrain: Train ==> ()
 		placeTrain(newTrain) == (
 			train := newTrain;
 		)
@@ -26,7 +26,7 @@ operations
 			train <> nil;
 
 -- removes train from railwayElement			
-	public removeTrain: [Train] ==> ()
+	public removeTrain: Train ==> ()
 		removeTrain(oldTrain) == (
 			train := nil;
 		)
@@ -36,7 +36,7 @@ operations
 			train = nil;
 			
 -- check if train is in ralewayElement 
-	public checkTrain: [Train] ==> bool
+	public checkTrain: Train ==> bool
 		checkTrain(thisTrain) == (
 			if thisTrain = train then return true
 			else return false;
