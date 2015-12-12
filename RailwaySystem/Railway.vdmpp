@@ -66,15 +66,15 @@ public setCircularRailway: () ==> seq of RailwayElement
 		
 -- Places a new train in a rail
 	public placeTrainInRail: nat1 * Train`Direction * nat1 ==> Train
-	placeTrainInRail(index, dir, stationIndex) == (
+	placeTrainInRail(index, dir, railIndex) == (
 		dcl train: Train := new Train(index,dir);
 		dcl tempSet: set of Train := {train};
 		
-		railwayElements(stationIndex).placeTrain(train);
+		railwayElements(railIndex).placeTrain(train);
 		trains := trains union tempSet;
 		
 		return train;
-		)pre isofclass(Rail, railwayElements(stationIndex));
+		)pre isofclass(Rail, railwayElements(railIndex));
 		
 -- Initializes all semaphores. It calls the corresponding subclass function for elements that are rails and stations
   public initAllSemaphores: () ==> ()
