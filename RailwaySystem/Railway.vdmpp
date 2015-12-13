@@ -87,6 +87,116 @@ public setCircularRailway: () ==> seq of RailwayElement
 		);
   );
   
+-- Advances one iteration
+	public advanceIt: set of Train ==> ()
+		advanceIt(trains) == (
+		dcl movedTrains: set of Train := {};
+		dcl stopedTrains: set of Train;
+		dcl startElem: RailwayElement;
+		dcl finalElem: RailwayElement;
+		
+		for all train in set trains do (
+			startElem := iota element in set elems railwayElements & element.checkTrain(train);
+			if train.direction = <ClOCKWISE> then (finalElem := startElem.clockwiseElement;)
+			else (finalElem := startElem.counterClockwiseElement;);
+			if moveTrain(train, startElem, finalElem) then movedTrains := movedTrains union {train}
+			else stopedTrains := stopedTrains union {train};
+		);
+		if card movedTrains > 0 then advanceIt(stopedTrains)
+		else return;
+		)
+		pre
+			card trains > 0 and len railwayElements > 1;
+
+	
+	public moveTrain: Train * RailwayElement * RailwayElement ==> bool
+	moveTrain(train, startElem, finalElem) == (
+		if (isofclass(Rail,startElem) and isofclass(Rail, finalElem))
+		then return moveTrainRailToRail(train, startElem, finalElem);
+		
+		if (isofclass(Rail,startElem) and isofclass(Station, finalElem))
+		then return moveTrainRailToStation(train, startElem, finalElem);
+		
+		if (isofclass(Station,startElem) and isofclass(Rail, finalElem))
+		then return moveTrainStationToRail(train, startElem, finalElem);
+		return false;
+	)
+		pre
+			isofclass(Station,startElem) => isofclass(Rail,finalElem);
+		
+	public moveTrainRailToRail: Train * Rail * Rail ==> bool
+		moveTrainRailToRail(train, startElem, finalElem) == (
+		if train.direction = <ClOCKWISE> 
+			then (
+			if startElem.checkClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		else(
+			if startElem.checkCounterClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		)
+		pre
+			startElem.train = train 
+			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
+		
+		post
+			finalElem.train = train;
+
+	public moveTrainRailToStation: Train * Rail * Station ==> bool
+		moveTrainRailToStation(train, startElem, finalElem) == (
+		if train.direction = <ClOCKWISE> 
+			then (
+			if startElem.checkClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		else(
+			if startElem.checkCounterClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		)
+		pre
+			startElem.train = train 
+			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
+		
+		post
+			(finalElem.clockwiseTrain = train or finalElem.counterClockwiseTrain =train);
+			
+	public moveTrainStationToRail: Train * Station * Rail ==> bool
+		moveTrainStationToRail(train, startElem, finalElem) == (
+		if train.direction = <ClOCKWISE> 
+			then (
+			if startElem.checkClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		else(
+			if startElem.checkCounterClockwiseSemaphoreIsRed() 
+			then return false
+			else (finalElem.placeTrain(train); 
+						startElem.removeTrain(train);
+						return true);)
+		)
+		pre
+			(startElem.clockwiseTrain = train or startElem.counterClockwiseTrain =train)
+			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
+		
+		post
+			finalElem.train = train;
+			
+  
 functions
 -- TODO Define functiones here
 traces
