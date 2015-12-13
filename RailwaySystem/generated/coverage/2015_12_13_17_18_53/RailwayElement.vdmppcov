@@ -5,8 +5,8 @@ values
 -- TODO Define values here
 instance variables
 	
-	public clockwiseSemaphore: Semaphore;
-	public counterClockwiseSemaphore: Semaphore;
+	public clockwiseSemaphore: Semaphore := nil;
+	public counterClockwiseSemaphore: Semaphore := nil;
 	
 	public clockwiseElement: [RailwayElement] := nil;
 	public counterClockwiseElement: [RailwayElement] := nil;

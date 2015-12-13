@@ -60,23 +60,15 @@ public setCircularRailway: () ==> ()
 		railwayElements(stationIndex).placeTrain(train);
 		trains := trains union tempSet;
 		
-		IO`print("Placed new train with id ");
+		IO`print("Placed new train in position ");
 		IO`print(index);
-		IO`print(" with direction ");
+		IO`print(" in direction ");
 		IO`print(dir);
-		IO`print("in station ");
-		IO`print(stationIndex);
+		IO`print(".");
 		IO`print(".\n");
 		
 		return train;
 		)pre isofclass(Station, railwayElements(stationIndex));
-
--- removes a train
-	public removeTrain: Train * RailwayElement ==> ()
-	removeTrain(train, railwayElement) ==
-	(
-		railwayElement.removeTrain(train);
-	);
 		
 -- Places a new train in a rail
 	public placeTrainInRail: nat1 * Train`Direction * nat1 ==> Train

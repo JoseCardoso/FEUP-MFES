@@ -1,20 +1,14 @@
-class Semaphore
+class Sensor
 types
 -- TODO Define types here
-public Light = <Green> | <Yellow> | <Red>;
-
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
-
-public semaphoreLight : Light:= <Yellow>;
-
-
 operations
-
+-- TODO Define operations here
 functions
 -- TODO Define functiones here
 traces
 -- TODO Define Combinatorial Test Traces here
-end Semaphore
+end Sensor

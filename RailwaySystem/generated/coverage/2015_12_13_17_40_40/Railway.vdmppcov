@@ -70,13 +70,6 @@ public setCircularRailway: () ==> ()
 		
 		return train;
 		)pre isofclass(Station, railwayElements(stationIndex));
-
--- removes a train
-	public removeTrain: Train * RailwayElement ==> ()
-	removeTrain(train, railwayElement) ==
-	(
-		railwayElement.removeTrain(train);
-	);
 		
 -- Places a new train in a rail
 	public placeTrainInRail: nat1 * Train`Direction * nat1 ==> Train

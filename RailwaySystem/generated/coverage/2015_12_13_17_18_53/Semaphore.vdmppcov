@@ -12,7 +12,11 @@ public semaphoreLight : Light:= <Yellow>;
 
 
 operations
-
+public Semaphore: Light ==> Semaphore
+	Semaphore(light) == (
+	semaphoreLight:=light;
+	return self
+	)
 functions
 -- TODO Define functiones here
 traces
