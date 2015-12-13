@@ -44,8 +44,8 @@ public setCircularRailway: () ==> seq of RailwayElement
  setCircularRailway() == (
 		railwayElements(len railwayElements).clockwiseElement := railwayElements(1);
 		railwayElements(1).counterClockwiseElement := railwayElements(len railwayElements);
+		initAllSemaphores();
 		IO`print("Closed Track.\n");
-		
 		return railwayElements;
 	)
 	post
@@ -60,6 +60,13 @@ public setCircularRailway: () ==> seq of RailwayElement
 		
 		railwayElements(stationIndex).placeTrain(train);
 		trains := trains union tempSet;
+		
+		IO`print("Placed new train in position ");
+		IO`print(index);
+		IO`print(" in direction ");
+		IO`print(dir);
+		IO`print(".");
+		IO`print(".\n");
 		
 		return train;
 		)pre isofclass(Station, railwayElements(stationIndex));
@@ -87,19 +94,26 @@ public setCircularRailway: () ==> seq of RailwayElement
 		);
   );
   
--- Advances one iteration
+-- Advances one iteration, making all trains that can move advance 1 element
 	public advanceIt: set of Train ==> ()
-		advanceIt(trains) == (
+		advanceIt(trainSet) == (
 		dcl movedTrains: set of Train := {};
 		dcl stopedTrains: set of Train;
 		dcl startElem: RailwayElement;
 		dcl finalElem: RailwayElement;
 		
-		for all train in set trains do (
+		for all train in set trainSet do (
 			startElem := iota element in set elems railwayElements & element.checkTrain(train);
 			if train.direction = <ClOCKWISE> then (finalElem := startElem.clockwiseElement;)
 			else (finalElem := startElem.counterClockwiseElement;);
-			if moveTrain(train, startElem, finalElem) then movedTrains := movedTrains union {train}
+			if moveTrain(train, startElem, finalElem) then(
+			movedTrains := movedTrains union {train};
+			IO`print("Moved train ");
+			IO`print(train.id);
+			IO`print(" in direction ");
+			IO`print(train.direction);
+			IO`print(".\n");
+			)
 			else stopedTrains := stopedTrains union {train};
 		);
 		if card movedTrains > 0 then advanceIt(stopedTrains)
@@ -108,7 +122,7 @@ public setCircularRailway: () ==> seq of RailwayElement
 		pre
 			card trains > 0 and len railwayElements > 1;
 
-	
+	--Checks railway element type and chooses corresponding function
 	public moveTrain: Train * RailwayElement * RailwayElement ==> bool
 	moveTrain(train, startElem, finalElem) == (
 		if (isofclass(Rail,startElem) and isofclass(Rail, finalElem))
@@ -124,6 +138,7 @@ public setCircularRailway: () ==> seq of RailwayElement
 		pre
 			isofclass(Station,startElem) => isofclass(Rail,finalElem);
 		
+	--Moves Train from a rail to the next rail
 	public moveTrainRailToRail: Train * Rail * Rail ==> bool
 		moveTrainRailToRail(train, startElem, finalElem) == (
 		if train.direction = <ClOCKWISE> 
@@ -147,7 +162,8 @@ public setCircularRailway: () ==> seq of RailwayElement
 		
 		post
 			finalElem.train = train;
-
+			
+	--Moves Train from a rail to the next station
 	public moveTrainRailToStation: Train * Rail * Station ==> bool
 		moveTrainRailToStation(train, startElem, finalElem) == (
 		if train.direction = <ClOCKWISE> 
@@ -171,7 +187,9 @@ public setCircularRailway: () ==> seq of RailwayElement
 		
 		post
 			(finalElem.clockwiseTrain = train or finalElem.counterClockwiseTrain =train);
-			
+
+
+	--Moves Train from a station to the next rail
 	public moveTrainStationToRail: Train * Station * Rail ==> bool
 		moveTrainStationToRail(train, startElem, finalElem) == (
 		if train.direction = <ClOCKWISE> 
@@ -195,8 +213,61 @@ public setCircularRailway: () ==> seq of RailwayElement
 		
 		post
 			finalElem.train = train;
+				
+	--Checks if a train can leave the station, all the path until the next station must be empty			
+	public checkIfTrainCanLeaveStation: Train ==> bool
+	checkIfTrainCanLeaveStation(train) == (
+	
+		dcl trainPosition: Station := iota element in set elems railwayElements & element.checkTrain(train);
+		IO`print("Train "); IO`print(train.id); IO`print(" is getting ready to leave station.\n");
+		
+		if checkFollowingElementsForTrains(train) then(
+				IO`print("Train ahead. Must stay in station");
+				return false;
+		);
+		
+		
+		if train.direction = <ClOCKWISE> then 
+			trainPosition.clockwiseElement.changeClockwiseSemaphore(<Green>)
+		else
+			trainPosition.clockwiseElement.changeCounterClockwiseSemaphore(<Green>);
+		IO`print("Success. Semaphores changed.\n");
+		return true;
+	);
 			
-  
+	public checkFollowingElementsForTrains: Train ==> bool
+	checkFollowingElementsForTrains(train) == (
+		
+		dcl trainPosition: RailwayElement := iota elem in set elems railwayElements & elem.checkTrain(train);
+		dcl nextElements: seq of RailwayElement := [];
+		dcl nextElem: RailwayElement;
+		if train.direction = <ClOCKWISE> then(
+			nextElem := trainPosition.clockwiseElement;
+			
+			while isofclass(Rail, nextElem) do (
+				nextElements := nextElements ^ [nextElem];
+				nextElem := nextElem.clockwiseElement;
+			);
+			
+		 nextElements := nextElements ^ [nextElem];
+			
+			return exists elem in set elems nextElements & elem.checkCounterClockwiseTrain() and nextElements(len nextElements).checkClockwiseTrain();
+		)
+		else (
+			nextElem := trainPosition.counterClockwiseElement;
+			
+			while isofclass(Rail, nextElem) do (
+			
+				nextElements := nextElements ^ [nextElem];
+				nextElem := nextElem.counterClockwiseElement;
+			);
+			 nextElements := nextElements ^ [nextElem];
+			
+			
+			return exists elem in set elems nextElements & elem.checkClockwiseTrain() and nextElements(len nextElements).checkCounterClockwiseTrain();
+		)
+		);
+	  
 functions
 -- TODO Define functiones here
 traces
