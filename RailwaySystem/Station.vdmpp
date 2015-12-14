@@ -67,10 +67,13 @@ operations
 	-- Initialize semaphores of the track
 	public initializeSemaphores: () ==> ()
 	initializeSemaphores() == (
+	
+		clockwiseSemaphore := new Semaphore();
+		counterClockwiseSemaphore := new Semaphore();
 		-- semaphores never get red nor green initially, as there are no trains
 		changeClockwiseSemaphore(<Yellow>);
 		changeCounterClockwiseSemaphore(<Yellow>);
-	)
+	);
 
 functions
 -- TODO Define functiones here

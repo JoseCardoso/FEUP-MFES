@@ -44,7 +44,7 @@ public setCircularRailway: () ==> ()
  setCircularRailway() == (
 		railwayElements(len railwayElements).clockwiseElement := railwayElements(1);
 		railwayElements(1).counterClockwiseElement := railwayElements(len railwayElements);
-		--initAllSemaphores();
+		initAllSemaphores();
 		IO`print("Closed Track.\n");
 	)
 	post
@@ -152,7 +152,7 @@ public setCircularRailway: () ==> ()
 			then (
 			if startElem.checkClockwiseSemaphoreIsRed() 
 			then return false
-			else (finalElem.placeTrain(train); 
+			else (finalElem.placeTrain(train);
 						startElem.removeTrain(train);
 						return true);)
 		else(

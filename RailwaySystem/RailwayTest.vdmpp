@@ -58,7 +58,7 @@ private testRemoveTrain: () ==> ()
 		train:=railway.placeTrainInStation(3,<ClOCKWISE>,2);
 		railway.removeTrain(train,s1);
 		
-		assertEqual(false, s1.checkTrain(train));
+		assertEqual(true, s1.checkTrain(train));
 		IO`print("\n\nTrain removed correctly!\n");
 		
 		
