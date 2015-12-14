@@ -37,15 +37,15 @@ operations
 -- check if train is in ralewayElement 
 	public checkTrain: Train ==> bool
 		checkTrain(thisTrain) == (
+		
 			if thisTrain = train then return true
 			else return false;
-		)
-		pre
-			train <> nil;
+		);
 			
 -- check train direction
 	public checkDirectionOfTrain: () ==> Train`Direction
 		 checkDirectionOfTrain() == (
+		 
 		 return train.direction;
 		 )
 		 pre
@@ -54,20 +54,22 @@ operations
 -- check if has a train going clockwise
 	public checkClockwiseTrain: () ==> bool
 		 checkClockwiseTrain() == (
+		 if  train <> nil then (
 		 if train.direction = <ClOCKWISE> then return true
-		 else return false
+		 else return false;
 		 )
-		 pre
-		 	train <> nil;
+		 else return false;
+		 );
 
 -- check if has a train going counterclockwise
 	public checkCounterClockwiseTrain: () ==> bool
 		 checkCounterClockwiseTrain() == (
+		 if  train <> nil then (
 		 if train.direction = <COUNTERCLOCKWISE> then return true
-		 else return false
+		 else return false;
 		 )
-		 pre
-		 	train <> nil;
+		 else return false;
+		 );
 		
 -- Initialize Semaphore
 	public initializeSemaphores: () ==> ()

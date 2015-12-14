@@ -7,11 +7,10 @@ instance variables
 railway : Railway := new Railway();
 r1 : RailwayElement := new Rail();
 r2 : RailwayElement := new Rail();
+r3 : RailwayElement := new Rail();
+r4 : RailwayElement := new Rail();
 s1 : RailwayElement := new Station();
 s2 : RailwayElement := new Station();
-t1 : Train := new Train(1,<ClOCKWISE>);
-t2 : Train := new Train(2, <COUNTERCLOCKWISE>);
-
 operations
 private resetVariables: () ==> ()
 	resetVariables() ==
@@ -19,16 +18,18 @@ private resetVariables: () ==> ()
 		railway := new Railway();
 		r1 := new Rail();
 		r2 := new Rail();
+		r3 := new Rail();
+		r4 := new Rail();
 		s1 := new Station();
 		s2 := new Station();
-		t1 := new Train(1,<ClOCKWISE>);
-		t2 := new Train(2, <COUNTERCLOCKWISE>);
 	);
 	
 private testPlaceTrain: () ==> ()
 	testPlaceTrain() ==
 	(
-		dcl train : Train;
+		dcl trainInStation : Train;
+		
+		dcl trainInRail : Train;
 		resetVariables();
 		IO`print("\n\nTest to check if a train is placed correctly!\n");
 		
@@ -37,9 +38,18 @@ private testPlaceTrain: () ==> ()
 		railway.appendRailwayElement(r2);
 		
 		railway.setCircularRailway();
-		train:=railway.placeTrainInStation(3,<ClOCKWISE>,2);
+		trainInStation:=railway.placeTrainInStation(3,<ClOCKWISE>,2);
+		trainInRail:= railway.placeTrainInRail(4,<COUNTERCLOCKWISE>,3);
+	  
+	  
 	  assertEqual(true,s1.checkClockwiseTrain());
-	  assertEqual(1,card railway.trains);
+	  assertEqual(true,r2.checkCounterClockwiseTrain());
+	  
+	  
+	  assertEqual(true,s1.checkTrain(trainInStation));
+	  assertEqual(true,r2.checkTrain(trainInRail));
+	  
+	  assertEqual(2,card railway.trains);
 		
 	);
 
@@ -58,19 +68,117 @@ private testRemoveTrain: () ==> ()
 		train:=railway.placeTrainInStation(3,<ClOCKWISE>,2);
 		railway.removeTrain(train,s1);
 		
-		assertEqual(true, s1.checkTrain(train));
+		assertEqual(false, s1.checkTrain(train));
 		IO`print("\n\nTrain removed correctly!\n");
 		
 		
 		);
-	
+		
+	private testValidRailway: () ==> ()
+  testValidRailway() ==
+  (
+ 		resetVariables();
+    IO`print("\n\nTest to check if the creation of a Railway is valid\n");
+   	railway.appendRailwayElement(r1);
+  	railway.appendRailwayElement(s1);
+  	railway.appendRailwayElement(r2);
+  	railway.appendRailwayElement(s2);
+  	railway.setCircularRailway();
+  	assertTrue(len railway.railwayElements = 4);
+  	assertTrue(railway.railwayElements = [r1, s1, r2, s2]);
+  	
+		IO`print("\n\nCreated Railway correctly!\n");
+  );
+  
+private testTwoTrainsInStation: () ==> ()
+ 	testTwoTrainsInStation() ==
+ 	(
+		
+		dcl trainC : Train;
+		
+		dcl trainCC : Train; 	
+ 	
+    IO`print("\n\nTest to check if a Station can support trains in both directions\n");	
+ 		resetVariables();
+ 		
+		railway.appendRailwayElement(r1);
+		railway.appendRailwayElement(s1);
+		railway.appendRailwayElement(r2);
+	 		
+ 		railway.setCircularRailway();  
+
+ 		trainC := railway.placeTrainInStation(3,<ClOCKWISE>,2);
+ 		trainCC := railway.placeTrainInStation(4,<COUNTERCLOCKWISE>,2);
+ 		   		
+ 		assertTrue(s1.checkClockwiseTrain());
+		assertTrue(s1.checkCounterClockwiseTrain());
+		
+		 
+		assertEqual(true,s1.checkTrain(trainC));
+	  assertEqual(true,s1.checkTrain(trainCC));
+	  
+	  assertEqual(2,card railway.trains);
+		IO`print("\n\nAdded Trains in both directions correctly!");
+		
+ 	);
+ 	
+private checkTrainsAskingToLeaveStations: () ==> () 	
+  checkTrainsAskingToLeaveStations() ==
+ 	(
+ 		dcl train1: Train;
+ 		dcl train2: Train;
+    IO`print("\n\nTest to check if only one train can be between two stations at a given time.\n");
+    IO`print("Permission must not be given when a train want to exit and another is already between stations.\n");	
+ 		
+ 		resetVariables();
+ 		
+ 		railway.appendRailwayElement(r1);
+ 		railway.appendRailwayElement(r2);
+ 		railway.appendRailwayElement(r3);
+ 		railway.appendRailwayElement(s1);
+ 		railway.appendRailwayElement(r4);
+ 		railway.appendRailwayElement(s2);
+ 		railway.setCircularRailway();
+ 		train1 := railway.placeTrainInStation(1, <ClOCKWISE>,4);
+ 		train2 := railway.placeTrainInStation(2, <COUNTERCLOCKWISE>,6);   		
+ 		
+   	assertEqual(true,s1.checkClockwiseTrain());
+   	assertEqual(false,s1.checkCounterClockwiseTrain());
+   	
+   	assertEqual(false,s2.checkClockwiseTrain());
+   	assertEqual(true,s2.checkCounterClockwiseTrain());
+   	
+   	assertTrue(s1.checkTrain(train1));
+   	assertEqual(2,card railway.trains);
+   	
+ 		assertTrue(railway.checkIfTrainCanLeaveStation(train1));
+ 	  railway.advanceIt({train1});
+ 	  
+ 		assertEqual(false,railway.checkIfTrainCanLeaveStation(train2)); 
+ 	
+ 	  
+   	assertTrue(r4.checkTrain(train1));
+   	assertTrue(s2.checkTrain(train2));
+   	
+    assertEqual(false,railway.checkIfTrainCanLeaveStation(train2)); 
+ 		railway.advanceIt({train1,train2});
+ 		assertTrue(railway.checkIfTrainCanLeaveStation(train2));
+		railway.advanceIt({train1,train2});
+ 		
+		assertTrue(r4.checkTrain(train2));
+   	assertTrue(s2.checkTrain(train1));
+ 	);
+
 public static main: () ==> ()
 	main() ==
 	(
 		dcl tester: RailwayTest := new RailwayTest();
 		
-		tester.testPlaceTrain();
-		tester.testRemoveTrain();
+		--tester.testPlaceTrain();
+		--tester.testRemoveTrain();
+		--tester.testValidRailway();
+		--tester.testTwoTrainsInStation();
+		tester.checkTrainsAskingToLeaveStations();
 		
 	);
 	

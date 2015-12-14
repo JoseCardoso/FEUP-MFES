@@ -123,8 +123,6 @@ public setCircularRailway: () ==> ()
 			)
 			else stopedTrains := stopedTrains union {train};
 		);
-		if card movedTrains > 0 then advanceIt(stopedTrains)
-		else return;
 		)
 		pre
 			card trains > 0 and len railwayElements > 1;
@@ -255,10 +253,16 @@ public setCircularRailway: () ==> ()
 				nextElements := nextElements ^ [nextElem];
 				nextElem := nextElem.clockwiseElement;
 			);
-			
+			IO`print( "\n\n ENTROU \n\n");
 		 nextElements := nextElements ^ [nextElem];
 			
-			return exists elem in set elems nextElements & elem.checkCounterClockwiseTrain() and nextElements(len nextElements).checkClockwiseTrain();
+		if exists elem in set elems nextElements & elem.checkCounterClockwiseTrain() and nextElements(len nextElements).checkClockwiseTrain() then (
+			IO`print( "\n\n Não Pode avançar C\n\n");
+			return true;
+		)
+		else (
+			IO`print( "\n\n Pode avançar C\n\n");
+			return false; );
 		)
 		else (
 			nextElem := trainPosition.counterClockwiseElement;
@@ -271,7 +275,13 @@ public setCircularRailway: () ==> ()
 			 nextElements := nextElements ^ [nextElem];
 			
 			
-			return exists elem in set elems nextElements & elem.checkClockwiseTrain() and nextElements(len nextElements).checkCounterClockwiseTrain();
+			if exists elem in set elems nextElements & elem.checkClockwiseTrain() and nextElements(len nextElements).checkCounterClockwiseTrain() then (
+			IO`print( "\n\nNão pode avançar CC\n\n");
+			return true;
+		)
+		else (
+			IO`print( "\n\nPode avançar CC\n\n");
+			return false; );
 		)
 		);
 	  
