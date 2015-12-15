@@ -111,7 +111,7 @@ public setCircularRailway: () ==> ()
 		
 		for all train in set trainSet do (
 			startElem := iota element in set elems railwayElements & element.checkTrain(train);
-			if train.direction = <ClOCKWISE> then (finalElem := startElem.clockwiseElement;)
+			if train.direction = <CLOCKWISE> then (finalElem := startElem.clockwiseElement;)
 			else (finalElem := startElem.counterClockwiseElement;);
 			if moveTrain(train, startElem, finalElem) then(
 			movedTrains := movedTrains union {train};
@@ -146,7 +146,7 @@ public setCircularRailway: () ==> ()
 	--Moves Train from a rail to the next rail
 	public moveTrainRailToRail: Train * Rail * Rail ==> bool
 		moveTrainRailToRail(train, startElem, finalElem) == (
-		if train.direction = <ClOCKWISE> 
+		if train.direction = <CLOCKWISE> 
 			then (
 			if startElem.checkClockwiseSemaphoreIsRed() 
 			then return false
@@ -162,7 +162,7 @@ public setCircularRailway: () ==> ()
 		)
 		pre
 			startElem.train = train 
-			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <CLOCKWISE> => startElem.clockwiseElement = finalElem 
 			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
 		
 		post
@@ -171,7 +171,7 @@ public setCircularRailway: () ==> ()
 	--Moves Train from a rail to the next station
 	public moveTrainRailToStation: Train * Rail * Station ==> bool
 		moveTrainRailToStation(train, startElem, finalElem) == (
-		if train.direction = <ClOCKWISE> 
+		if train.direction = <CLOCKWISE> 
 			then (
 			if startElem.checkClockwiseSemaphoreIsRed() 
 			then return false
@@ -187,7 +187,7 @@ public setCircularRailway: () ==> ()
 		)
 		pre
 			startElem.train = train 
-			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <CLOCKWISE> => startElem.clockwiseElement = finalElem 
 			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
 		
 		post
@@ -197,7 +197,7 @@ public setCircularRailway: () ==> ()
 	--Moves Train from a station to the next rail
 	public moveTrainStationToRail: Train * Station * Rail ==> bool
 		moveTrainStationToRail(train, startElem, finalElem) == (
-		if train.direction = <ClOCKWISE> 
+		if train.direction = <CLOCKWISE> 
 			then (
 			if startElem.checkClockwiseSemaphoreIsRed() 
 			then return false
@@ -213,7 +213,7 @@ public setCircularRailway: () ==> ()
 		)
 		pre
 			(startElem.clockwiseTrain = train or startElem.counterClockwiseTrain =train)
-			and train.direction = <ClOCKWISE> => startElem.clockwiseElement = finalElem 
+			and train.direction = <CLOCKWISE> => startElem.clockwiseElement = finalElem 
 			and train.direction = <COUNTERCLOCKWISE> => startElem.counterClockwiseElement = finalElem
 		
 		post
@@ -222,7 +222,9 @@ public setCircularRailway: () ==> ()
 	--Checks if a train can leave the station, all the path until the next station must be empty			
 	public checkIfTrainCanLeaveStation: Train ==> bool
 	checkIfTrainCanLeaveStation(train) == (
-	
+		dcl nextElements: seq of RailwayElement := [];
+		dcl nextElem: Rail;
+		
 		dcl trainPosition: Station := iota element in set elems railwayElements & element.checkTrain(train);
 		IO`print("Train "); IO`print(train.id); IO`print(" is getting ready to leave station.\n");
 		
@@ -232,33 +234,51 @@ public setCircularRailway: () ==> ()
 		);
 		
 		
-		if train.direction = <ClOCKWISE> then 
-			trainPosition.clockwiseElement.changeClockwiseSemaphore(<Green>)
-		else
-			trainPosition.clockwiseElement.changeCounterClockwiseSemaphore(<Green>);
+		if train.direction = <CLOCKWISE> then( 
+			trainPosition.changeClockwiseSemaphore(<Green>);
+			while isofclass(Rail, nextElem) do (
+				nextElements := nextElements ^ [nextElem];
+				nextElem := nextElem.clockwiseElement;
+			);
+			 for all rail in set {r | r in set elems nextElements & isofclass(Rail, r)} do (
+				
+				rail.changeClockwiseSemaphore(<Green>);
+		);
+			
+		)else(
+			trainPosition.changeCounterClockwiseSemaphore(<Green>);
+			while isofclass(Rail, nextElem) do (
+				nextElements := nextElements ^ [nextElem];
+				nextElem := nextElem.counterClockwiseElement;
+			);
+			 for all rail in set {r | r in set elems nextElements & isofclass(Rail, r)} do (
+				
+				rail.changeCounterClockwiseSemaphore(<Green>);
+		);
+			
+			);
 		IO`print("Success. Semaphores changed.\n");
 		return true;
 	);
 			
 	public checkFollowingElementsForTrains: Train ==> bool
 	checkFollowingElementsForTrains(train) == (
-		
+		dcl nextStation: RailwayElement;
 		dcl trainPosition: RailwayElement := iota elem in set elems railwayElements & elem.checkTrain(train);
 		dcl nextElements: seq of RailwayElement := [];
 		dcl nextElem: RailwayElement;
-		if train.direction = <ClOCKWISE> then(
+		if train.direction = <CLOCKWISE> then(
 			nextElem := trainPosition.clockwiseElement;
 			
 			while isofclass(Rail, nextElem) do (
 				nextElements := nextElements ^ [nextElem];
 				nextElem := nextElem.clockwiseElement;
 			);
-			IO`print( "\n\n ENTROU \n\n");
-		 nextElements := nextElements ^ [nextElem];
-			
-		if exists elem in set elems nextElements & elem.checkCounterClockwiseTrain() and nextElements(len nextElements).checkClockwiseTrain() then (
+		  nextStation:= nextElem;
+		 
+		if exists elem in set elems nextElements & elem.checkCounterClockwiseTrain() or nextStation.checkClockwiseTrain() then (
 			IO`print( "\n\n Não Pode avançar C\n\n");
-			return true;
+			return true
 		)
 		else (
 			IO`print( "\n\n Pode avançar C\n\n");
@@ -272,12 +292,12 @@ public setCircularRailway: () ==> ()
 				nextElements := nextElements ^ [nextElem];
 				nextElem := nextElem.counterClockwiseElement;
 			);
-			 nextElements := nextElements ^ [nextElem];
+		  nextStation:= nextElem;
 			
 			
-			if exists elem in set elems nextElements & elem.checkClockwiseTrain() and nextElements(len nextElements).checkCounterClockwiseTrain() then (
+		if exists elem in set elems nextElements & elem.checkClockwiseTrain() or nextStation.checkCounterClockwiseTrain() then (
 			IO`print( "\n\nNão pode avançar CC\n\n");
-			return true;
+			return true
 		)
 		else (
 			IO`print( "\n\nPode avançar CC\n\n");

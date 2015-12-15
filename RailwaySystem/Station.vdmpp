@@ -20,14 +20,14 @@ operations
 -- places a train in the corresponding railwayElement
 	public placeTrain: Train ==> ()
 		placeTrain(newTrain) == (
-			if newTrain.direction = <ClOCKWISE> then (clockwiseTrain:=newTrain;)
+			if newTrain.direction = <CLOCKWISE> then (clockwiseTrain:=newTrain;)
 			else (counterClockwiseTrain:=newTrain;)
 		)
 		pre
-			if newTrain.direction = <ClOCKWISE> then (clockwiseTrain = nil)
+			if newTrain.direction = <CLOCKWISE> then (clockwiseTrain = nil)
 			else (counterClockwiseTrain = nil)
 		post
-			(clockwiseTrain <> nil => clockwiseTrain.direction = <ClOCKWISE>)
+			(clockwiseTrain <> nil => clockwiseTrain.direction = <CLOCKWISE>)
 			and
 			(counterClockwiseTrain <> nil => counterClockwiseTrain.direction = <COUNTERCLOCKWISE>);
 			
@@ -71,8 +71,8 @@ operations
 		clockwiseSemaphore := new Semaphore();
 		counterClockwiseSemaphore := new Semaphore();
 		-- semaphores never get red nor green initially, as there are no trains
-		changeClockwiseSemaphore(<Yellow>);
-		changeCounterClockwiseSemaphore(<Yellow>);
+		changeClockwiseSemaphore(<Red>);
+		changeCounterClockwiseSemaphore(<Red>);
 	);
 
 functions

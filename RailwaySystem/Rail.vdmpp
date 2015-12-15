@@ -55,7 +55,7 @@ operations
 	public checkClockwiseTrain: () ==> bool
 		 checkClockwiseTrain() == (
 		 if  train <> nil then (
-		 if train.direction = <ClOCKWISE> then return true
+		 if train.direction = <CLOCKWISE> then return true
 		 else return false;
 		 )
 		 else return false;

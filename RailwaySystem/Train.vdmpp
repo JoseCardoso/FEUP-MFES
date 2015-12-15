@@ -1,13 +1,13 @@
 class Train
 types
-	public Direction = <ClOCKWISE> | <COUNTERCLOCKWISE>;
+	public Direction = <CLOCKWISE> | <COUNTERCLOCKWISE>;
 	public Id = nat1;
 	
 values
 -- TODO Define values here
 instance variables
 -- TODO Define instance variables here
-public direction : Direction:= <ClOCKWISE>;
+public direction : Direction:= <CLOCKWISE>;
 public id : Id;
 
 operations
